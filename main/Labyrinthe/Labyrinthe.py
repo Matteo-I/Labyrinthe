@@ -1,5 +1,8 @@
 from random import randrange as rd
 from Cheetah.Template import Template
+import matplotlib.pyplot as plt
+import networkx as nx
+import pygraphviz
 import webbrowser
 
 
@@ -16,6 +19,10 @@ class Cellule:
 class Labyrinthe:
     def __init__(self, hauteur, longueur):
         self.grille=self.construire_grille(hauteur, longueur)
+        self.hauteur=hauteur
+        self.long=longueur
+        print(self.hauteur, self.long)
+        self.graph=self.gen_graph()
 
     def __repr__(self):
         result=''
@@ -27,9 +34,9 @@ class Labyrinthe:
 
     def construire_grille(self, hauteur, longueur):
         grille = []
-        for i in range(hauteur):
+        for banane in range(hauteur):
             ligne = []
-            for j in range(longueur):
+            for poire in range(longueur):
                 cellule = Cellule(True,True,True,True)
                 ligne.append(cellule)
             grille.append(ligne)
@@ -95,18 +102,55 @@ class Labyrinthe:
                     self.creer_passage(l,colonne+demi-1,l,colonne+demi)
     
     def generate_html(self):
-        with open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrythe/Labyrynthe/main/repr.html') as d:
+        with open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrinthe/Labyrinthe/main/Labyrinthe/repr.html') as d:
             content="".join(d.readlines())
             
         t = Template(content,searchList=[{'grille':self.grille}])
-        f = open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrythe/Labyrynthe/main/labyrinthe.html', "w")
+        f = open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrinthe/Labyrinthe/main/Labyrinthe/labyrinthe.html', "w")
         f.write(str(t))
         f.close()
+    
+    def gen_graph(self):
+        G = nx.Graph()
+        edges=[]
+        for y in range(self.hauteur):
+            for x in range(self.long):
+                cell= self.grille[y][x]
+                if not cell.murs['N'] :
+                    edges.append(((x,y),(x,y-1)))
+                if not cell.murs['S'] :
+                    edges.append(((x,y),(x,y+1)))
+                if not cell.murs['O'] :
+                    edges.append(((x,y),(x-1,y)))
+                if not cell.murs['E'] :
+                    edges.append(((x,y),(x+1,y)))
+        for edge in edges:
+            G.add_edge(edge[0],edge[1])
+        return G
+    
+    def repr_graph(self):
+        options = {
+            "font_size": 6,
+            "node_size": 500,
+            "edgecolors": "#4682B4",
+            "alpha": 0.95,
+            "linewidths": 1,
+            "width": 1,
+        }
+        plt.figure(figsize=(8,8))
+        pos = nx.nx_agraph.graphviz_layout(self.gen_graph())
+        # dessin du graphe
+        nx.draw(self.gen_graph(), pos, with_labels=True, **options)
+        # dessins des poids
+        nx.draw_networkx_edge_labels(self.gen_graph(), pos, edge_labels = nx.get_edge_attributes(self.gen_graph(),'weight'))
+        plt.show()
 
 
 
 
-a=Labyrinthe(40,40)
-a.creer_labyrinthe(0,0,40,40,4)
+a=Labyrinthe(10,10)
+a.creer_labyrinthe(0,0,10,10,1)
 a.generate_html()
-webbrowser.open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrythe/Labyrynthe/main/labyrinthe.html')
+webbrowser.open('/home/m.imbert/Bureau/NSI/Terminal/ProjetsTerm/Labyrinthe/Labyrinthe/main/Labyrinthe/labyrinthe.html')
+print(a.gen_graph())
+a.repr_graph()

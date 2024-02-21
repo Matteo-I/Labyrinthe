@@ -8,10 +8,12 @@
             .S {border-bottom:0px solid black}
             .O {border-left:0px solid black}
             .E {border-right:1px solid black}
-            td {width: 10px; height: 12px;}
             table {border-left: 1px solid black;
             border-bottom: 1px solid black;
-            border-spacing: 0px;}
+            border-spacing: 0px;
+            width:90%;
+            height: 90%;
+            margin : auto;}
           </style>
     </head>
     <body>
@@ -19,7 +21,7 @@
             #for $ligne in $grille
             <tr>
                 #for $cell in $ligne
-                <td class="$cell.generateclass()" id="$grille.index(ligne),$ligne.index(cell)">   
+                <td class="$cell.generateclass()" id="$ligne.index(cell),$grille.index(ligne)">   
                 </td>
                 #end for
             </tr>

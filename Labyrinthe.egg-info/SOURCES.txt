@@ -1,0 +1,8 @@
+README.md
+setup.py
+Labyrinthe.egg-info/PKG-INFO
+Labyrinthe.egg-info/SOURCES.txt
+Labyrinthe.egg-info/dependency_links.txt
+Labyrinthe.egg-info/not-zip-safe
+Labyrinthe.egg-info/requires.txt
+Labyrinthe.egg-info/top_level.txt
